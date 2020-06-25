@@ -41,7 +41,7 @@ public class MongoSourceSmt<R extends ConnectRecord<R>> implements Transformatio
         final Object newKey = doc.getEmbedded(Arrays.asList(path.split("\\.")), Object.class);
 
         if (null == newKey) {
-            throw new ConnectException("Document does not contain a \"" + path + "\" field.");
+            throw new ConnectException("Document does not contain a \"" + path + "\" field or its value is null.");
         }
 
         if (newKey instanceof List || newKey.getClass().isArray()) {

@@ -92,4 +92,17 @@ class MongoSourceSmtTest {
 
         assertThrows(ConnectException.class, () -> xform.apply(record));
     }
+
+    @Test
+    void embeddedField() {
+        xform.configure(Collections.singletonMap(MongoSourceSmt.PATH_CONFIG, "fullDocument.a"));
+
+        final String value = new Document("fullDocument", new Document("a", 1).append("b", "value")).toJson();
+        final SourceRecord record = new SourceRecord(null, null, "", Schema.STRING_SCHEMA, null, Schema.STRING_SCHEMA, value);
+
+        final SourceRecord transformedRecord = xform.apply(record);
+
+        final String expectedKey = "{\"_id\": 1}";
+        assertEquals(expectedKey, transformedRecord.key());
+    }
 }

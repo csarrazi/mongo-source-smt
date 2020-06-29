@@ -75,12 +75,7 @@ class MongoSourceSmtTest {
 
     @Test
     void invalidPath() {
-        xform.configure(Collections.singletonMap(MongoSourceSmt.PATH_CONFIG, "_id."));
-
-        final String value = new Document("_id", 123).toJson();
-        final SourceRecord record = new SourceRecord(null, null, "", Schema.STRING_SCHEMA, null, Schema.STRING_SCHEMA, value);
-
-        assertThrows(ConnectException.class, () -> xform.apply(record));
+        assertThrows(ConnectException.class, () -> xform.configure(Collections.singletonMap(MongoSourceSmt.PATH_CONFIG, "_id.")));
     }
 
     @Test

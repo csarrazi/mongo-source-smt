@@ -25,6 +25,9 @@ public class MongoSourceSmt<R extends ConnectRecord<R>> implements Transformatio
     public void configure(final Map<String, ?> configs) {
         final MongoSourceSmtConfig config = new MongoSourceSmtConfig(CONFIG_DEF, configs);
         path = config.getString(PATH_CONFIG);
+        if (path.endsWith(".")) {
+            throw new ConnectException("Path should not end with a dot (\".\") character.");
+        }
     }
 
     public R apply(final R r) {
@@ -33,10 +36,6 @@ public class MongoSourceSmt<R extends ConnectRecord<R>> implements Transformatio
         }
 
         final Document doc = Document.parse(r.value().toString());
-
-        if (path.endsWith(".")) {
-            throw new ConnectException("Path should not end with a dot (\".\") character.");
-        }
 
         final Object newKey = doc.getEmbedded(Arrays.asList(path.split("\\.")), Object.class);
 
